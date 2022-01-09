@@ -1,3 +1,7 @@
+.idea
+
+deploy/k8s/oauth2-secrets.yml
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
