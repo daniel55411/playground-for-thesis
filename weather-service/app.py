@@ -97,5 +97,10 @@ def temperature_api() -> Any:
 def admin() -> str:
     return render_template(
         'admin.html',
-        email=request.headers.get('X-Forwarded-Email'),
+        email=request.headers.get('X-Auth-Request-Email'),
     )
+
+
+@app.route('/_debug')
+def debug() -> Mapping[str, str]:
+    return dict(request.headers)
