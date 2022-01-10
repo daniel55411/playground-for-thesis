@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    k8s-app: {{ .Values.service.name }}
+    {{- include "authn-example.labels" . | nindent 4 }}
+  name: {{ .Values.service.name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: {{ .Values.service.name }}
+  template:
+    metadata:
+      labels:
+        k8s-app: {{ .Values.service.name }}
+    spec:
+      containers:
+        - name: {{ .Values.service.name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: Never
+          ports:
+            - containerPort: {{ .Values.service.port }}
+              protocol: TCP

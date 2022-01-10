@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    k8s-app: {{ .Values.service.name }}
+    {{- include "authn-example.labels" . | nindent 4 }}
+  name: {{ .Values.service.name }}
+spec:
+  ports:
+  - name: http
+    port: {{ .Values.service.port }}
+    protocol: TCP
+    targetPort: {{ .Values.service.port }}
+  selector:
+    k8s-app: {{ .Values.service.name }}
