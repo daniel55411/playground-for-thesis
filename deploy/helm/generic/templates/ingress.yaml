@@ -35,3 +35,32 @@ spec:
           {{- end }}
     {{- end }}
   {{- end }}
+
+
+{{- if .Values.oauth.enabled }}
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: oauth2-proxy
+#  namespace: kube-system
+spec:
+  ingressClassName: nginx
+  rules:
+  {{- range .Values.ingress.hosts }}
+  - host: {{ .host | quote }}
+    http:
+      paths:
+        {{- range .paths }}
+        - path: /oauth2
+          pathType: Prefix
+          backend:
+            service:
+              name: oauth2-proxy
+              port:
+                number: 4180
+        {{- end }}
+  {{- end }}
+{{- end }}
