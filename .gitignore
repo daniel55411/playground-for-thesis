@@ -1,6 +1,7 @@
 .idea
 
 deploy/k8s/oauth2-secrets.yml
+deploy/ansible/deploy/secrets.yml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

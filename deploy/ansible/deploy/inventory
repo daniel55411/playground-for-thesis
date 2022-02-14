@@ -1,0 +1,2 @@
+[web]
+web-1 ansible_port=5555 ansible_host=localhost

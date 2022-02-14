@@ -1,0 +1,6 @@
+---
+- name: Restart oauth2-proxy
+  become: true
+  ansible.builtin.service:
+   name: oauth2-proxy
+   state: restarted

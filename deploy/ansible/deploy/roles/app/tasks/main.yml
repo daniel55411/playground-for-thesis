@@ -1,0 +1,19 @@
+- name: Get infos on container
+  community.docker.docker_container_info:
+    name: weather-service-app
+  register: app_container
+
+- name: Remove app container
+  community.docker.docker_container:
+    name: weather-service-app
+    state: absent
+  when: app_container.exists
+
+- name: Start app container
+  community.docker.docker_container:
+    name: weather-service-app
+    image: registry.local:5000/weather-service:{{ app_version }}
+    state: started
+    restart: yes
+    ports:
+      - "80:5000"

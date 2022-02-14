@@ -1,0 +1,3 @@
+---
+registry_host: registry.local
+registry_port: 5000

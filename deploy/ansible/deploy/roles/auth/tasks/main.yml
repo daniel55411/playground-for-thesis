@@ -1,0 +1,79 @@
+- name: Add the user oauth2-proxy
+  become: true
+  ansible.builtin.user:
+    name: oauth2-proxy
+    state: present
+    system: yes
+    create_home: no
+
+- name: Download oauth2-proxy release
+  get_url:
+    url: https://github.com/oauth2-proxy/oauth2-proxy/releases/download/v7.2.1/oauth2-proxy-v7.2.1.linux-amd64.tar.gz
+    dest: /tmp/oauth2_proxy.tag.gz
+    mode: '0660'
+
+- name: Extract oauth2-proxy into /tmp/oauth2-proxy
+  ansible.builtin.unarchive:
+    src: /tmp/oauth2_proxy.tag.gz
+    dest: /tmp
+    remote_src: yes
+
+- name: Copy oauth2-proxy to /usr/bin
+  become: true
+  copy:
+    src: /tmp/oauth2-proxy-v7.2.1.linux-amd64/oauth2-proxy
+    dest: /usr/bin/
+    remote_src: yes
+    group: oauth2-proxy
+    mode: '0770'
+
+- name: Create oauth2-proxy dir
+  become: true
+  ansible.builtin.file:
+    path: /etc/oauth2-proxy
+    state: directory
+    owner: oauth2-proxy
+    group: oauth2-proxy
+    mode: '0755'
+
+- name: Template a config file to oauth2-proxy.cfg
+  become: true
+  ansible.builtin.template:
+    src: oauth2-proxy.cfg.j2
+    dest: /etc/oauth2-proxy/oauth2-proxy.cfg
+    owner: oauth2-proxy
+    group: oauth2-proxy
+    mode: '0660'
+  notify:
+    - Restart oauth2-proxy
+
+- name: Template a service
+  become: true
+  ansible.builtin.template:
+    src: oauth2-proxy.service.j2
+    dest: /etc/systemd/system/oauth2-proxy.service
+    mode: '0644'
+  notify:
+    - Restart oauth2-proxy
+
+- name: Run oauth2-proxy
+  become: true
+  ansible.builtin.systemd:
+    name: oauth2-proxy
+    state: started
+
+- name: Forward local traffic port 80 to 4180
+  become: yes
+  ansible.builtin.iptables:
+    table: nat
+    chain: OUTPUT
+    action: insert
+    out_interface: lo
+    rule_num: 1
+    protocol: tcp
+    match: tcp
+    destination: 127.0.0.1
+    destination_port: 80
+    jump: REDIRECT
+    to_ports: 4180
+    comment: Redirect web traffic to port 4180

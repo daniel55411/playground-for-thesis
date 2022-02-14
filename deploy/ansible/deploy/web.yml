@@ -1,0 +1,6 @@
+---
+- hosts: web
+  roles:
+    - docker
+    - app
+    - auth

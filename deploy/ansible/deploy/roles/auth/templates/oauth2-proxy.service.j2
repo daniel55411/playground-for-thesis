@@ -1,0 +1,10 @@
+[Unit]
+Description=oauth2-proxy
+
+[Service]
+ExecStart=oauth2-proxy --config=/etc/oauth2-proxy/oauth2-proxy.cfg
+User=oauth2-proxy
+Group=oauth2-proxy
+
+[Install]
+WantedBy=multi-user.target
