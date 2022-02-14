@@ -21,7 +21,7 @@ kubectl apply -f deploy/k8s/oauth2-proxy.yml,deploy/k8s/weather-service.yml,depl
 
 Туннелирование:
 ```shell script
-echo "127.0.0.1 weather-service.local" >> /etc/hosts
+sudo echo "127.0.0.1 weather-service.local" >> /etc/hosts
 minikube tunnel
 curl https://weather-service.local/admin/temperature
 ```
@@ -49,7 +49,7 @@ helm upgrade -i --atomic -f deploy/helm/generic/values.yaml app deploy/helm/gene
 
 Туннелирование:
 ```shell script
-echo "127.0.0.1 weather-service.local" >> /etc/hosts
+sudo echo "127.0.0.1 weather-service.local" >> /etc/hosts
 minikube tunnel
 curl https://weather-service.local/admin/temperature
 ```
@@ -78,6 +78,7 @@ docker run -d -p 5000:5000 --restart always --name registry registry:2
 
 Пуш в локальный регистри
 ```shell script
+sudo echo "127.0.0.1 registry.local" >> /etc/hosts
 docker build -f weather-service/Dockerfile weather-service -t registry.local:5000/weather-service
 docker push registry.local:5000/weather-service
 ```
