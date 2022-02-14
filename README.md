@@ -71,6 +71,17 @@ kubectl delete all --all
 limactl start ansible/vm/vm-1.yaml
 ```
 
+Запуск локального registry:
+```shell script
+docker run -d -p 5000:5000 --restart always --name registry registry:2
+```
+
+Пуш в локальный регистри
+```shell script
+docker build -f weather-service/Dockerfile weather-service -t registry.local:5000/weather-service
+docker push registry.local:5000/weather-service
+```
+
 Запуск ansible
 ```shell script
 cd deploy/ansible/deploy
